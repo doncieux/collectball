@@ -35,10 +35,10 @@ Usage & installation
 --------------------
 
 ### Dependencies:
-sferes2 core
+sferes2 core (https://github.com/sferes2/sferes2)
 sferes2 modules:
-* fastsim
-* nn2
+* fastsim (https://github.com/jbmouret/libfastsim for the core library and https://github.com/sferes2/fastsim to connect it to sferes)
+* nn2 (https://github.com/sferes2/nn2)
 
 Author
 -------
