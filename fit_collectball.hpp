@@ -131,7 +131,7 @@ namespace sferes
 
 #ifdef VERBOSE
       static int nbeval=0;
-      std::cout<<"fit="<<this->_objs[0]<<" nb_collected="<<nb_collected<<" nbeval="<<nbeval<<std::endl;
+      std::cout<<"fit="<<this->_objs[0]<<" nb_collected="<<nb_collected<<" eval_length="<<_nb_eval<<" nbeval="<<nbeval<<std::endl;
       nbeval++;
 #endif
 
@@ -142,7 +142,6 @@ namespace sferes
       void init_simu(Simu& simu)
     {
       
-
       /*
 	VARIANTS :
 	* VARIANT_SW1: the balls do not appear at first, only one ball appears, one after the other, when the switch is pushed
@@ -529,6 +528,10 @@ namespace sferes
       using namespace fastsim;
       int state_for_display=_carrying_ball; // used for logging purposes
 
+      float rx=simu.robot().get_pos().x();
+      float ry=simu.robot().get_pos().y();
+
+
 #if defined(VARIANT_SW1) || defined(VARIANT_SW2)
       // We switch on the switch so that the robot can go and activate it again to make a new ball appear
       if (swtimer==0) {
@@ -579,6 +582,7 @@ namespace sferes
 	      float xx = rx-simu.map()->get_illuminated_switches()[k]->get_x();
 	      float yy = ry-simu.map()->get_illuminated_switches()[k]->get_y();
 	      float dist = sqrtf(xx * xx + yy * yy);
+
 	      if (dist<simu.robot().get_radius()){
 		// the ball is within range
 #ifdef VERBOSE
@@ -657,7 +661,7 @@ namespace sferes
     {
       using namespace fastsim;
       // *** move robot ***
-      simu.move_robot(4.0*(outf[0] * 2-1), 4.*(outf[1] * 2-1));
+      simu.move_robot(4.0*(outf[0] * 2.0 - 1.0), 4.*(outf[1] * 2.0 - 1.0));
 	
       // *** Check if robot is stuck ***
       if ((old_pos.dist_to(simu.robot().get_pos())<0.0001)&&
@@ -676,16 +680,6 @@ namespace sferes
 	    }
 	  }
 	}
-      // *** collision = stop evaluation (not active by default) ***
-#ifdef COLLISION
-      if (outf[2]<0.5) {
-	if (simu.robot().get_collision()) {
-	  stop_eval = true;
-	  std::cout<<"Collision, we stop the eval..."<<std::endl;
-	  break;
-	}
-      }
-#endif
       old_pos=simu.robot().get_pos();
     }
 
@@ -695,6 +689,10 @@ namespace sferes
     {
 
       if (!watch) return;
+
+      float rx=simu.robot().get_pos().x();
+      float ry=simu.robot().get_pos().y();
+
 
 #if defined(HAMMING) || defined(ENTROPY) || defined(MULTIDIST)
       std::bitset<Params::fitness::nb_io> sv;    // binarized sensorimotor stream
@@ -824,7 +822,6 @@ namespace sferes
     bool _carrying_ball;                             // Is the robot carrying a ball?
     bool _carried_ball;
     std::vector<float> outf, inputs;
-    float rx, ry;                                    // Robot x and y
 
     int _nb_eval;                                    // Number of evaluation (until the robot stands still)
 
