@@ -1,4 +1,4 @@
-Collecball
+Collectball
 ==========
 
 This is the source code of the collectball experiment.
@@ -55,15 +55,20 @@ Peer-reviewed academic papers that use this experiment
 
 
 (you can find a pdf for most of these publications on http://scholar.google.com).
+
 ### 2014
 - Doncieux, S. (2014). Knowledge Extraction from Learning Traces in Continuous Domains. AAAI 2014 fall Symposium ''Knowledge, Skill, and Behavior Transfer in Autonomous Robots''.
+
 ### 2013
 - Doncieux, S. and Mouret, J.B. (2013). Behavioral Diversity with Multiple Behavioral Distances. Proc. of IEEE Congress on Evolutionary Computation, 2013 (CEC 2013).
 - Doncieux, S. (2013). Transfer Learning for Direct Policy Search: A Reward Shaping Approach. Proceedings of ICDL-EpiRob conference.
+
 ### 2012
 - Mouret, J.-B. and Doncieux, S. (2012). Encouraging Behavioral Diversity in Evolutionary Robotics: an Empirical Study. Evolutionary Computation. Vol 20 No 1 Pages 91-133.
+
 ### 2011
 - Ollion, C. and Doncieux, S. (2011). Why and How to Measure Exploration in Behavioral Space. GECCO'11: Proceedings of the 13th annual conference on Genetic and evolutionary computation ACM, publisher. Pages 267--294.
+
 ### 2010
 - Doncieux, S. and Mouret, J.-B. (2010). Behavioral diversity measures for Evolutionary Robotics. WCCI 2010 IEEE World Congress on Computational Intelligence, Congress on Evolutionary Computation (CEC). Pages 1303--1310.
 
