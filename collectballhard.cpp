@@ -9,6 +9,7 @@
 
 #include "fit_collectball.hpp"
 
+std::string res_dir="not_initialized";
 
 // ****************** Main *************************
 int main(int argc, char **argv)
@@ -53,6 +54,7 @@ int main(int argc, char **argv)
   ea_t ea;
 
 
+  res_dir=ea.res_dir();
   run_ea(argc, argv, ea);
 
   return 0;
