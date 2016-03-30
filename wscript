@@ -15,6 +15,7 @@ def build(bld):
                            cxxflags = bld.get_env()['CXXFLAGS'] + ['-Wno-unknown-pragmas'],
                            json = 'collectballhard.json',
                            variants = [
+                                 'ADHOC DIV_BEHAVIOR SAVEBMP',
                                  'ADHOC DIV_BEHAVIOR',
                                  'TRAJECTORY DIV_BEHAVIOR',
                                  'HAMMING DIV_BEHAVIOR',
