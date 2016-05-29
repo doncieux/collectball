@@ -99,7 +99,7 @@ typedef enum _fit_id{
 #endif
 
 #include <sferes/fit/fitness.hpp>
-//#include <sferes/modif/dummy.hpp>
+#include <sferes/modif/dummy.hpp>
 //#include "modifier_filiation.hpp"
 #include <sferes/eval/parallel.hpp>
 #include <sferes/eval/eval.hpp>

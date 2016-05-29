@@ -1,7 +1,7 @@
 #! /usr/bin/env python
 
 import sferes
-
+from waflib.Configure import conf
 
 def build(bld):
 
@@ -9,8 +9,8 @@ def build(bld):
 
         sferes.create_variants(bld,
                            source='collectballhard.cpp',
-                           uselib_local = 'sferes2 fastsim',
-                           uselib = 'EIGEN3 SDL BOOST_GRAPH TBB',
+                           use = 'sferes2 fastsim',
+                           uselib = 'EIGEN SDL BOOST BOOST_GRAPH TBB SFERES2 FASTSIM',
                            target = 'collectballhard',
                            cxxflags = bld.get_env()['CXXFLAGS'] + ['-Wno-unknown-pragmas'],
                            json = 'collectballhard.json',

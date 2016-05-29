@@ -9,6 +9,8 @@
 
 #include "fit_collectball.hpp"
 
+
+
 std::string res_dir="not_initialized";
 
 // ****************** Main *************************
@@ -36,10 +38,8 @@ int main(int argc, char **argv)
     modif::Modifier_DD<Params>
 #elif defined(NOV_BEHAVIOR) 
     modif::BehaviorNov<Params>  
-#elif defined(NO_DIV) 
-    modif::Dummy<Params>
 #else
-#error "unknown div"
+    modif::Dummy<Params>
 #endif
     > modifier_t;
   //typedef ea::Nsga2<phen_t, eval_t, stat_t, modifier_t, Params> ea_t; 
@@ -53,9 +53,12 @@ int main(int argc, char **argv)
 #endif
   ea_t ea;
 
-
-  res_dir=ea.res_dir();
-  run_ea(argc, argv, ea);
-
+  try {
+    res_dir=ea.res_dir();
+    run_ea(argc, argv, ea);
+  }
+  catch(fastsim::Exception e) {
+    std::cerr<<"fastsim::Exception: "<<e.get_msg()<<std::endl;
+  }
   return 0;
 }
