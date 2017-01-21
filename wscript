@@ -13,7 +13,6 @@ def build(bld):
                            uselib = 'EIGEN SDL BOOST BOOST_GRAPH TBB SFERES2 FASTSIM',
                            target = 'collectballhard',
                            cxxflags = bld.get_env()['CXXFLAGS'] + ['-Wno-unknown-pragmas'],
-                           json = 'collectballhard.json',
                            variants = [
                                  'ADHOC DIV_BEHAVIOR SAVEBMP',
                                  'ADHOC DIV_BEHAVIOR',
