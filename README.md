@@ -34,6 +34,20 @@ Doncieux, S. and Mouret, J.B. (2013). Behavioral Diversity with Multiple Behavio
 Usage & installation
 --------------------
 
+### Docker
+A Docker image in which all the dependencies have been installed together with sferes the collectball experiment and the required module can be found here: https://hub.docker.com/r/doncieux/collectball/
+To use it, you need to install docker (https://www.docker.com/) and to do the following:
+   docker pull doncieux/collectball 
+To run the docker image:
+   docker run -it doncieux/collectball
+
+The collectball executables are in /git/sferes2/build/exp/collectball
+
+You can launch them or make your own modifications and test their result.
+
+WARNING: the modifications you make in the container will be lost when you quit the image. If you want to keep it, you need to create data volumes or mount a host directory. See https://docs.docker.com/engine/tutorials/dockervolumes/ for more details.
+
+
 ### Dependencies:
 sferes2 core (https://github.com/sferes2/sferes2)
 sferes2 modules:
