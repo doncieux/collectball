@@ -92,11 +92,7 @@ typedef enum _fit_id{
 #include <sferes/gen/sampled.hpp>
 #endif
 
-#ifdef FILIATION
-#include "nsga2_filiation.hpp"
-#else
-#include <sferes/ea/nsga2.hpp>
-#endif
+//#include <sferes/ea/nsga2.hpp>
 
 #include <sferes/fit/fitness.hpp>
 #include <sferes/modif/dummy.hpp>
@@ -106,11 +102,12 @@ typedef enum _fit_id{
 #include <sferes/stat/pareto_front.hpp>
 #include <sferes/stat/best_fit.hpp>
 
+#include <modules/multimaps_QD/multiple_maps_quality_diversity.hpp>
+#include <modules/multimaps_QD/fit_mmqd.hpp>
+#include <modules/multimaps_QD/fit_qd.hpp>
+#include <modules/multimaps_QD/multiple_maps/includes.hpp>
 
 
-#ifdef FILIATION
-#include "stat_filiation.hpp"
-#endif
 
 #include "stat_nn.hpp"
 #include "stat_tracelog.hpp"

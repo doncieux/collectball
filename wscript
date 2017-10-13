@@ -14,19 +14,17 @@ def build(bld):
                            target = 'collectballhard',
                            cxxflags = bld.get_env()['CXXFLAGS'] + ['-Wno-unknown-pragmas'],
                            variants = [
-                                 'ADHOC DIV_BEHAVIOR SAVEBMP',
-                                 'ADHOC DIV_BEHAVIOR',
-                                 'TRAJECTORY DIV_BEHAVIOR',
-                                 'HAMMING DIV_BEHAVIOR',
-                                 'ENTROPY DIV_BEHAVIOR',
-                                 'DYNAMIC_DIVERSITY',
-                                 'ADHOC NOV_BEHAVIOR',
-                                 'TRAJECTORY NOV_BEHAVIOR',
-                                 'HAMMING NOV_BEHAVIOR',
-                                 'ENTROPY NOV_BEHAVIOR',
-                                 'DYNAMIC_DIVERSITY',
-                                 'ELMAN DYNAMIC_DIVERSITY',
-                                 'DYNAMIC_DIVERSITY VARIANT_SW1',
-                                 'DYNAMIC_DIVERSITY VARIANT_SW2'
+                                 #'MULTIDIST ARCHIVE PARETO', #SD: need to find a way to compute a crowding distance on NN
+                                 #'MULTIDIST ARCHIVE PARETO VARIANT_SW1',
+                                 #'MULTIDIST ARCHIVE PARETO VARIANT_SW2',
+                                 #'MULTIDIST ARCHIVE FITNESSNOVELTY',
+                                 #'MULTIDIST ARCHIVE FITNESSNOVELTY VARIANT_SW1',
+                                 #'MULTIDIST ARCHIVE FITNESSNOVELTY VARIANT_SW2',
+                                 #'MULTIDIST ARCHIVE FITNESSCURIOSITY',
+                                 #'MULTIDIST ARCHIVE FITNESSCURIOSITY VARIANT_SW1',
+                                 #'MULTIDIST ARCHIVE FITNESSCURIOSITY VARIANT_SW2',
+                                 'MULTIDIST ARCHIVE CURIOSITY',
+                                 'MULTIDIST ARCHIVE CURIOSITY VARIANT_SW1',
+                                 'MULTIDIST ARCHIVE CURIOSITY VARIANT_SW2'
                                        ])
 

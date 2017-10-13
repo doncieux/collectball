@@ -5,6 +5,11 @@
 
 struct Params
 {
+  struct pareto
+  {
+    SFERES_CONST bool genoDiv =false;
+  };
+  
   struct dnn
   {
 
@@ -96,7 +101,7 @@ struct Params
 #elif defined DEBUG
     static constexpr unsigned nb_gen = 201;
 #else
-    static constexpr unsigned nb_gen = 4001; //RESET 5001
+    static constexpr unsigned nb_gen = 1001; //RESET 5001
 #endif
 
 #if defined(FILIATION)
@@ -124,7 +129,7 @@ struct Params
     static constexpr unsigned int nb_io = Params::dnn::nb_inputs+Params::dnn::nb_outputs; 
     static constexpr unsigned int nb_bits=nb_io;
     static constexpr unsigned int nb_caracs = 9;
-    static constexpr unsigned int sampling_rate = 10;
+    static constexpr unsigned int sampling_rate = 50;
   };
 	
   struct parameters
@@ -185,8 +190,62 @@ struct Params
 
 };
 
+struct Params1 // Params of fitQD1: behavior adhoc
+{
+  struct nov{
+    SFERES_CONST size_t deep=3; //7x7
+    SFERES_CONST size_t k=15;
+    SFERES_CONST double l=0.01;
+    SFERES_CONST double eps=0.1;
+    
+  };
+    struct ea
+    {
+      SFERES_CONST size_t behav_dim = 48; // 8 balls x 3 instances x 2 (2 dimensions: (x, y))
+      //SFERES_ARRAY(size_t, behav_shape,100, 100);
+    };
+
+};
+
+struct Params2 // Params of fitQD2: trajectory
+{
+  struct nov{
+    SFERES_CONST size_t deep=3; //7x7
+    SFERES_CONST size_t k=15;
+    SFERES_CONST double l=20.;
+    SFERES_CONST double eps=0.1;
+    
+  };
+    struct ea
+    {
+      SFERES_CONST size_t behav_dim = Params::fitness::nb_step_watch/Params::fitness::sampling_rate*3;
+      //SFERES_ARRAY(size_t, behav_shape, 100, 100, 100);
+    };
+
+};
+
+struct Params3 // Params of fitQD3: entropy
+{
+  struct nov{
+    SFERES_CONST size_t deep=3; //7x7
+    SFERES_CONST size_t k=15;
+    SFERES_CONST double l=0.6;
+    SFERES_CONST double eps=0.1;
+    
+  };
+    struct ea
+    {
+      SFERES_CONST size_t behav_dim = 15;
+      //SFERES_ARRAY(size_t, behav_shape, 100, 100, 100, 100);
+    };
+
+};
+
+
+
+/*
 #if defined(ELMAN) //ELMAN  
-typedef FitCollectBallElman<Params> fit_t;
+typedef FitCollectBallElmanMMQD<Params> fit_t;
 #ifndef SAMPLEDPARAMS
   typedef gen::EvoFloat<nn::elman::Count<Params::dnn::nb_inputs, Params::elman::nb_hidden, Params::dnn::nb_outputs>::nb_params, Params> gen_t;
 #else
@@ -195,8 +254,21 @@ typedef FitCollectBallElman<Params> fit_t;
   typedef phen::Parameters<gen_t, fit_t, Params> phen_t;
 
 #elif defined(DNN) // DNN
+*/
+
 using namespace nn;
-typedef FitCollectBallDnn<Params> fit_t;
+
+typedef DummyFitQD<Params1> fit1_t;
+typedef DummyFitQD<Params2> fit2_t;
+typedef DummyFitQD<Params3> fit3_t;
+//  typedef DummyFitQD<Params4> fit4_t;
+
+typedef boost::fusion::vector<fit1_t, fit2_t, fit3_t//, fit4_t
+			      > fit_v_t;
+
+typedef FitCollectBallMMQD<Params, fit_v_t> fit_t;
+
+
 #ifndef SAMPLEDPARAMS
   typedef phen::Parameters<gen::EvoFloat<1, Params>, fit::FitDummy<>, Params> weight_t;
   typedef phen::Parameters<gen::EvoFloat<1, Params>, fit::FitDummy<>, Params> bias_t;
@@ -213,10 +285,11 @@ typedef FitCollectBallDnn<Params> fit_t;
   typedef sferes::gen::Dnn< neuron_t, connection_t, Params> gen_t;
   typedef phen::Dnn<gen_t, fit_t, Params> phen_t;
 
+/*
 #else
 # error "unknown gen."
 #endif
-
+*/
 
 
 #endif

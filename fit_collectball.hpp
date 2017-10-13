@@ -8,11 +8,23 @@ extern std::string res_dir;
 namespace sferes
 {
 
+  /** FitQD to be used in the multimap fitness. Nothing special to put in this one for this example.
+   */
+  FIT_QD(DummyFitQD) {
+  public:
+    template<typename Indiv>
+      void eval(Indiv& ind)
+    {
+      
+    }
+  };
+
+
   // ********** Main Class ***********
-  SFERES_FITNESS(FitCollectBall, sferes::fit::Fitness)
+  FIT_MMQD(FitCollectBallMMQD)
   {
   public:
-    FitCollectBall():_number(0),_father(0),tracefile(NULL) { }
+    FitCollectBallMMQD():_number(0),_father(0),tracefile(NULL) { }
 
 	// Accessor/selectors for managing the filiation 
     void set_number(int number) { _number = number; }
@@ -24,6 +36,13 @@ namespace sferes
     int father() { return _father; }
     int number() { return _number; }
 
+    template<typename Indiv>
+      void eval(Indiv& ind) 
+    {
+      ind.nn().simplify();
+      this->_eval(ind.nn());
+    }
+
 		
     // *************** _eval ************
     //
@@ -34,7 +53,6 @@ namespace sferes
     template<typename NN>
       void _eval(NN &nn)
     { 
-
 
 #ifdef VERBOSE
 	std::cout<<"Eval ..."<<std::endl;
@@ -77,7 +95,8 @@ namespace sferes
       
 
       // *** Main Loop *** 
-      for (size_t i = 0; i < Params::simu::nb_steps && !stop_eval; ++i)
+      size_t i;
+      for (i = 0; i < Params::simu::nb_steps && !stop_eval; ++i)
 	{	    
 
 	  // Number of steps the robot is evaluated
@@ -122,14 +141,64 @@ namespace sferes
 
 
     // Update objectives
-      unsigned int i;
-      for (i=0;i<nb_fit;i++) {
-	     this->_objs[i]=0;
+      unsigned int iobj;
+      for (iobj=0;iobj<nb_fit;iobj++) {
+	     this->_objs[iobj]=0;
       }
 
       // Ball Objective 
       this->_objs[ballcount] = nb_collected/(1.0*nbinst*nb_balls); 
       this->_value = nb_collected/(1.0*nbinst*nb_balls); 
+
+      // Behavior descriptors:
+
+      // They are all eligible, all the time
+      this->set_eligible(0,true);
+      this->set_eligible(1,true);
+      this->set_eligible(2,true);
+      this->set_eligible(3,true);
+
+      // 0: adhoc
+      this->set_current_fit_ind(0);
+      std::vector<float> _data0;
+      // std::ostringstream oss;
+      // oss<<"behavior adhoc size="<<_behavior_adhoc.size()<<std::endl;
+      // std::cout<<oss.str();
+      for (unsigned int ii=0;ii<_behavior_adhoc.size();ii++)
+	_data0.push_back(_behavior_adhoc[ii]);
+      
+      this->set_desc(_data0);
+
+
+      // 1: trajectory
+      this->set_current_fit_ind(1);
+      std::vector<float> _data1(0);
+      // std::ostringstream oss2;
+      // oss2<<"trajectory size="<<_trajectory.size()<<std::endl;
+      // std::cout<<oss2.str();
+      for (unsigned int ii=0;ii<_trajectory.size();ii++) {
+	_data1.push_back(_trajectory[ii].x);
+	_data1.push_back(_trajectory[ii].y);
+	_data1.push_back(_trajectory[ii].ball?1:0);
+      }
+      this->set_desc(_data1);
+
+      // 2: entropy
+      this->set_current_fit_ind(2);
+      std::vector<float> _data2;
+      // std::ostringstream oss3;
+      // oss3<<"entropy="<<_entropy.size()<<std::endl;
+      // std::cout<<oss3.str();
+      for (unsigned int ii=0;ii<_entropy.size();ii++) {
+	_data2.push_back(_entropy[ii]);
+      }
+      this->set_desc(_data2);
+
+      // Would be interesting to add hamming, but it would require to change fitqd code...
+      // 1: hamming
+      //      this->set_current_fit_ind(1);
+
+
 
       // Diversity/novelty objectives are updated elsewhere (in a modifier)
 
@@ -794,14 +863,14 @@ namespace sferes
 
 #if defined(TRAJECTORY) || defined(MULTIDIST)
       if(num_eval<Params::fitness::nb_step_watch) {
-	     if(num_eval%50==0) {
-	       struct point_traj up;
-	       up.x=(int)(rx*NB_TILES/simu.map()->get_real_w());
-	       up.y=(int)(ry*NB_TILES/simu.map()->get_real_h());
-	       up.ball=_carrying_ball;
-	       if(up.x>12 || up.x<0 || up.y>12 || up.y<0) 
-	         std::cout<<"Problem! "<<up.x<<" "<<up.y<<" "<<simu.map()->get_real_w()<<" "<<rx<<" "<<stop_eval<<std::endl;
-	       else
+	if(num_eval%Params::fitness::sampling_rate==0) {
+	  struct point_traj up;
+	  up.x=(int)(rx*NB_TILES/simu.map()->get_real_w());
+	  up.y=(int)(ry*NB_TILES/simu.map()->get_real_h());
+	  up.ball=_carrying_ball;
+	  if(up.x>12 || up.x<0 || up.y>12 || up.y<0) 
+	    std::cout<<"Problem! "<<up.x<<" "<<up.y<<" "<<simu.map()->get_real_w()<<" "<<rx<<" "<<stop_eval<<std::endl;
+	  else
 	    _trajectory.push_back(up);
 	}
       }
@@ -850,15 +919,15 @@ namespace sferes
     std::ofstream *tracefile;
   };
 	
-
+  /*
   // ****************** Fitness ELMAN *************************
-  SFERES_FITNESS(FitCollectBallElman, FitCollectBall)
+  SFERES_FITNESS(FitCollectBallElmanMMQD, FitCollectBallMMQD)
   {
   public:
     template<typename Indiv>
       float dist(const Indiv& o) const 
     {
-      return SFERES_PARENT(FitCollectBallElman, FitCollectBall)::dist(o);
+      return SFERES_PARENT(FitCollectBallElmanMMQD, FitCollectBallMMQD)::dist(o);
     }
     template<typename Indiv>
       void eval(const Indiv& ind) 
@@ -876,7 +945,7 @@ namespace sferes
   };
 
   // ****************** Fitness DNN *************************
-  SFERES_FITNESS(FitCollectBallDnn, FitCollectBall)
+  SFERES_FITNESS(FitCollectBallDnnMMQD, FitCollectBallMMQD)
   {
   public:
     template<typename Indiv>
@@ -886,7 +955,7 @@ namespace sferes
       this->_eval(ind.nn());
     }
   };
-  
+  */
 
 }
 
