@@ -148,7 +148,7 @@ namespace sferes
 
       // Ball Objective 
       this->_objs[ballcount] = nb_collected/(1.0*nbinst*nb_balls); 
-      this->_value = nb_collected/(1.0*nbinst*nb_balls); 
+      this->_value = nb_collected;// /(1.0*nbinst*nb_balls); 
 
       // Behavior descriptors:
 

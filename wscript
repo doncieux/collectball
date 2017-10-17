@@ -23,6 +23,9 @@ def build(bld):
                                  #'MULTIDIST ARCHIVE FITNESSCURIOSITY',
                                  #'MULTIDIST ARCHIVE FITNESSCURIOSITY VARIANT_SW1',
                                  #'MULTIDIST ARCHIVE FITNESSCURIOSITY VARIANT_SW2',
+                                 'MULTIDIST ARCHIVE FITNESS',
+                                 'MULTIDIST ARCHIVE FITNESS VARIANT_SW1',
+                                 'MULTIDIST ARCHIVE FITNESS VARIANT_SW2',
                                  'MULTIDIST ARCHIVE CURIOSITY',
                                  'MULTIDIST ARCHIVE CURIOSITY VARIANT_SW1',
                                  'MULTIDIST ARCHIVE CURIOSITY VARIANT_SW2'
