@@ -34,11 +34,71 @@ Doncieux, S. and Mouret, J.B. (2013). Behavioral Diversity with Multiple Behavio
 Usage & installation
 --------------------
 
+### Docker
+A Docker image in which all the dependencies have been installed together with sferes the collectball experiment and the required module can be found here: https://hub.docker.com/r/doncieux/collectball/
+To use it, you need to install docker (https://www.docker.com/) and to do the following:
+   docker pull doncieux/collectball 
+To run the docker image:
+   docker run -it doncieux/collectball
+
+The collectball executables are in /git/sferes2/build/exp/collectball
+
+You can launch them or make your own modifications and test their result.
+
+WARNING: the modifications you make in the container will be lost when you quit the image. If you want to keep it, you need to create data volumes or mount a host directory. See https://docs.docker.com/engine/tutorials/dockervolumes/ for more details.
+
+
 ### Dependencies:
 sferes2 core (https://github.com/sferes2/sferes2)
 sferes2 modules:
 * fastsim (https://github.com/jbmouret/libfastsim for the core library and https://github.com/sferes2/fastsim to connect it to sferes)
 * nn2 (https://github.com/sferes2/nn2)
+
+sferes2 has its own dependencies (notably boost, tbb and eigen). Check sferes2 documentation for more details.
+
+### Installation
+
+In the following, it is assumed that all the git repositories have been cloned in ~/git.
+
+First, libfastsim need to be compiled:
+    cd ~/git/libfastsim
+    ./waf configure
+    ./waf build
+
+Before compiling the experiment, the following instructions need to be executed:
+    cd ~/git/sferes2/modules
+    ln -s ~/git/fastsim
+    ln -s ~/git/nn2
+    cd ~/git/sferes2/exp
+    ln -s ~/git/collectball
+    cd ~/git/sferes2/
+    echo fastsim >> modules.conf
+    echo nn2 >> modules.conf
+
+To compile the experiment:
+    cd ~/git/sferes2
+    ./waf configure
+    ./waf build --exp=collectball
+
+### Launching an experiment and viewing the results
+
+To run an experiment, launch one of the executables in ~/git/sferes2/build/default/exp/collectball. It will create a directory with the generated results.
+gen_XX files contain the best individual(s) of the generation XX. To look at its behavior, launch the following command:
+    my_executable -o data --load=gen_XX
+where my_executable is the the program that has generated gen_XX and XX the generation number to look at.
+
+### Experiments in sferes
+
+An experiment describes what is to be evolved, how and how it is evaluated. The experiments provided here contain mostly the evaluation part (the fitness function). The other parts are standard sferes2 modules.
+
+Variants of an experiments are defined using macros. This is the reason why the source conde contains many
+    #ifdef VARIANT1
+       // what to do for VARIANT1
+    #else
+       // what to do for other variants 
+    #endif
+
+A variant of an experiment is defined by a set of labels. The choice of the variants to compile is made in the wscript file. The variant with the labels VARIANT1 FIT1 ENV1 of an exp my_exp.cpp creates an executable called my_exp_variant1_fit1_env1.
 
 Author
 -------
@@ -77,5 +137,17 @@ Documentation
 
 See sferes2 main documentation for an overview of this framework. 
 
-TODO
+The collectball experiment aims at making a robot collect balls and put them into a basket. Each collected ball gives one fitness point. The environment is continuous, as well as the orders sent to the motors.
+
+The main variants defined are:
+
+Fitness objectives:
+* NO_DIV: no diversity nor novelty objectives. Number of collected balls only. Don't expect it to work
+* DIV_BEHAVIOR: basic behavioral diversity mechanism
+* NOV_BEHAVIOR: novelty objective (diversity with respect to the current population and an archive of past individuals).
+* DYNAMIC_DIVERSITY: behavioral diversity within a behavioral space that changes along evolution.
+
+* VARIANT_SW1 and VARIANT_SW2: more difficult versions of the original task. There are less balls and the switch needs to be activated for them to appear.  
+
+* VISU: look at the behaviors during an evolutionary run. By default, they do not appear for the run to be faster. You can anyway see them afterwards.
 

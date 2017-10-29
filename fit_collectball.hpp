@@ -1,6 +1,10 @@
 #ifndef _FIT_COLLECTBALL_HPP
 #define _FIT_COLLECTBALL_HPP
 
+
+
+extern std::string res_dir;
+
 namespace sferes
 {
 
@@ -443,9 +447,18 @@ namespace sferes
 	      simu.robot().set_color(7);
 	    }
 	    simu.refresh_view();
-	  }
-	
-    }
+#ifdef SAVEBMP
+        // WARNING: use with caution as it will generate many BMP...
+        std::ostringstream os;
+        os<<res_dir<<"/img_"<<std::setfill('0')<<std::setw(6)<<_nb_eval<<".bmp";
+        std::cout<<"Saving image: "<<os.str()<<std::endl;
+        if (simu.display().save_BMP(os.str().c_str())!=0) {
+          std::cerr<<"ERROR, can't save file: "<<os.str()<<std::endl;
+        }
+
+#endif
+	 }
+  }
 
     // *** Get sensors inputs
     template<typename Simu>
